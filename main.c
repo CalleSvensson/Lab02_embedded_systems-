@@ -8,19 +8,23 @@
 #include "led.h"
 #include "serial.h"
 #include "timer.h"
-bool countUp = true;
+//bool countUp = true;
 void main (void) 
 {
 	uart_init();
 	LED_init();
 	timer_init();
-	int count = 0;
+	//int count = 0;
 	
 	while (1) 
 	{
-	
-		OCR0A = count; 
-		if (countUp)
+		if (TIFR2 & (1 << OCF2A))
+		{
+			OCR0A = simple_ramp();
+			TIFR2 = (1 << OCF2A);
+		}
+		
+		/*if (countUp)
 		{
 			count++; 
 			if (count == 255) countUp = false;
@@ -30,7 +34,7 @@ void main (void)
 			count--;
 			if (count == 0) countUp = true;
 		}
-		_delay_ms(10);
+		_delay_ms(10);*/
 
 		/*if(TIFR0 & (1<<OCF0A)) // check CTC flag
 		{
