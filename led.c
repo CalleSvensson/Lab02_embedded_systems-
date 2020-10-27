@@ -5,18 +5,10 @@ bool ledIsOn = false;
 void LED_init() 
 {
     DDRB |= (1 << PB3); // set pin 11 on Arduino board to output
-    //DDRB |= (1 << PB2); // set pin 10 on Arduino board to output
-    //DDRB |= (1 << PB1); // set pin 9 on Arduino board to output
+    DDRD |= (1 << PD6); // set pin 6 on Arduino board to output(AIN0/OC0A)
 }
 void LED_toggle()
 {
-    ledIsOn = !ledIsOn;
-    if(ledIsOn == false)
-    {
-        PORTB |= (1 << PB3);
-    }
-    else
-    {
-        PORTB &= ~(1 << PB3);
-    }
+    PORTB ^= (1 << PB3); // flip LED bit
+    //PORTD ^= (1 << PD6); // flip LED bit
 }

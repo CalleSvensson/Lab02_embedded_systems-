@@ -3,22 +3,36 @@
 #include <util/delay.h>
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "led.h"
 #include "serial.h"
 #include "timer.h"
-
+bool countUp = true;
 void main (void) 
 {
 	uart_init();
 	LED_init();
 	timer_init();
-	int i = 0;
+	int count = 0;
 	
 	while (1) 
 	{
-		//if ((TIFR0 & (1 << TOV0)) == 1) // Check flag tifr0 == ocr0b
-		if(TIFR0 & (1<<OCF0A))
+	
+		OCR0A = count; 
+		if (countUp)
+		{
+			count++; 
+			if (count == 255) countUp = false;
+		}
+		else
+		{
+			count--;
+			if (count == 0) countUp = true;
+		}
+		_delay_ms(10);
+
+		/*if(TIFR0 & (1<<OCF0A)) // check CTC flag
 		{
 		
 		i++;	
@@ -28,8 +42,7 @@ void main (void)
 			LED_toggle();
 			i = 0;
 		}
-		//TIFR0 = (1 << TOV0); // reset flag
 		TIFR0 = (1 << OCF0A); // reset flag
-		}
+		}*/
 	}
 }
